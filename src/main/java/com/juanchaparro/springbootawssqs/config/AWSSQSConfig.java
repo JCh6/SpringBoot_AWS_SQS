@@ -2,14 +2,12 @@ package com.juanchaparro.springbootawssqs.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class AWSSQSConfig {
@@ -28,19 +26,16 @@ public class AWSSQSConfig {
         return new QueueMessagingTemplate(amazonSQSAsync());
     }
 
-    @Primary
-    @Bean
-    public AmazonSQSAsync amazonSQSAsync() {
+    private AmazonSQSAsync amazonSQSAsync() {
         return AmazonSQSAsyncClientBuilder
                 .standard()
                 .withRegion(awsRegion)
-                //.withCredentials(awsStaticCredentialsProvider())
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsAccessKey, awsSecretKey)))
+                .withCredentials(awsStaticCredentialsProvider())
                 .build();
     }
 
-    /*public AWSStaticCredentialsProvider awsStaticCredentialsProvider() {
+    private AWSStaticCredentialsProvider awsStaticCredentialsProvider() {
         return new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsAccessKey, awsSecretKey));
-    }*/
+    }
 
 }
